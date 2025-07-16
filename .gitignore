@@ -1,9 +1,11 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
+# Ignore Node.js dependencies
+/frontend/node_modules/
+/frontend/.next/
+/frontend/dist/
+/frontend/.env.local
+/frontend/.env
 
 # testing
 /coverage
@@ -21,3 +23,37 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+# Ignore Java / Spring Boot build files
+/backend/target/
+/backend/.classpath
+/backend/.project
+/backend/.settings/
+
+
+# IDEs and OS-specific
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Ignore compiled class files
+*.class
+
+# Maven Wrapper
+/backend/.mvn/
+/backend/mvnw
+/backend/mvnw.cmd
+
+# Ignore compiled class files
+*.class
+
+# Maven Wrapper
+/backend/.mvn/
+/backend/mvnw
+/backend/mvnw.cmd

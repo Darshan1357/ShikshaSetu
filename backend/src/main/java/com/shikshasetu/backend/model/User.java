@@ -27,13 +27,21 @@ public class User {
 
     private String role; // STUDENT, TRAINER, ADMIN
 
+    @Builder.Default
+    private boolean active = true;
     // @Builder.Default
     // private LocalDateTime registeredAt = LocalDateTime.now();
-
 
     // @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
     // private List<Course> courses;
 
     // @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     // private List<Enrollment> enrollments;
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }

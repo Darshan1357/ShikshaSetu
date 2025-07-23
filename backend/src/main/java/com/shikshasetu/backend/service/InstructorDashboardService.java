@@ -5,8 +5,8 @@ import com.shikshasetu.backend.dto.InstructorDashboardDTO;
 import com.shikshasetu.backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -48,8 +48,8 @@ public class InstructorDashboardService {
         return statsList;
     }
 
-    private String formatDate(Date date) {
-        if (date == null) return "";
-        return new SimpleDateFormat("yyyy-MM-dd").format(date);
+    private String formatDate(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yyyy");
+        return dateTime.format(formatter);
     }
 }

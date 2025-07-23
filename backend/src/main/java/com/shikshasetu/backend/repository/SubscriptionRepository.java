@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
     Optional<Subscription> findTopByUserOrderByEndDateDesc(User user);
-    boolean existsByUserAndIsActiveTrue(User user);
+    boolean existsByUserAndActiveTrue(User user);
     boolean existsByUserAndCourseAndActiveTrue(User user, Course course);
     List<Subscription> findByActiveFalseAndEndDateBefore(java.time.LocalDate date);
 }

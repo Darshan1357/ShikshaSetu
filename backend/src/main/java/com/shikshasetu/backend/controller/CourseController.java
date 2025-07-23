@@ -16,7 +16,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/courses")
+@RequestMapping("/api/courses/search-advanced")
 @CrossOrigin
 public class CourseController {
 

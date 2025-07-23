@@ -22,7 +22,7 @@ public class SubscriptionService {
     private EmailService emailService;
 
     public boolean hasActiveSubscription(User user) {
-        return subscriptionRepository.existsByUserAndIsActiveTrue(user);
+        return subscriptionRepository.existsByUserAndActiveTrue(user);
     }
 
     public Subscription createNewSubscription(User user) {

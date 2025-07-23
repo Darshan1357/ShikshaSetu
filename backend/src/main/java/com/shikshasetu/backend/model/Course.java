@@ -1,9 +1,9 @@
 package com.shikshasetu.backend.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.*;
-import java.util.Date;
 import lombok.*;
 //import java.util.Optional;
 
@@ -32,18 +32,14 @@ public class Course {
     @Column(name = "duration_in_weeks", nullable = false)
     private Integer durationInWeeks;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdDate = new Date();
-    }
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date", nullable = false, updatable = false)
-    private Date createdDate;    
+    @Builder.Default
+    private LocalDateTime createdDate = LocalDateTime.now();    
 
     @ManyToOne
     @JoinColumn(name = "instructor_id")
-    private User instructor;  // link to the instructor who created it
+    private User instructor;  
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
@@ -57,11 +53,11 @@ public class Course {
     this.videos = videos;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public LocalDateTime getCreatedDate() {
+    return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setCreatedDate(LocalDateTime createdDate) {
+    this.createdDate = createdDate;
     }
 }

@@ -18,6 +18,9 @@ public class Subscription {
     @ManyToOne
     private User user;
 
+    @ManyToOne
+    private Course course;
+
     private LocalDate startDate;
     private LocalDate endDate;
 

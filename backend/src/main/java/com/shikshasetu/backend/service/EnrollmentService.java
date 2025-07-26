@@ -86,14 +86,15 @@ import java.util.stream.Collectors;
     Enrollment saved = enrollmentRepository.save(enrollment);
 
     // 🔔 Email notification
+    // ✅ Send course enrollment confirmation
     emailService.sendEmail(
-        student.getEmail(),
-        "Enrollment Successful – ShikshaSetu",
-        "Hello " + student.getName() + ",\n\n" +
-        "You’ve successfully enrolled in the course: \"" + course.getTitle() + "\".\n" +
-        "Happy Learning!\n\nTeam ShikshaSetu"
+    student.getEmail(),
+    "📚 Enrolled in " + course.getTitle(),
+    "Hello " + student.getName() + ",\n\n" +
+    "You’ve successfully enrolled in: " + course.getTitle() + "\n" +
+    "Start learning now and complete the videos to earn your certificate!\n\n" +
+    "Regards,\nShikshaSetu Team"
     );
-
     return saved;
     }
 }

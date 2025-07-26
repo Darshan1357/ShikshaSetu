@@ -4,12 +4,16 @@ import com.shikshasetu.backend.dto.AuthRequest;
 import com.shikshasetu.backend.dto.AuthResponse;
 import com.shikshasetu.backend.model.User;
 import com.shikshasetu.backend.repository.UserRepository;
+import com.shikshasetu.backend.service.EmailService;
 import com.shikshasetu.backend.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import com.shikshasetu.backend.dto.RegisterRequest;
+import com.shikshasetu.backend.model.Role;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -28,6 +32,9 @@ public class AuthController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private EmailService emailService;
+
     @PostMapping(value = "/login", consumes = "application/json")
     public AuthResponse login(@RequestBody AuthRequest request) {
 
@@ -41,19 +48,30 @@ public class AuthController {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         // 🔑 Generate JWT token
-        String token = jwtUtil.generateToken(user.getEmail());
+        String jwtToken = jwtUtil.generateToken(user.getEmail());
         System.out.println("Login endpoint hit!");
 
-        return new AuthResponse(token, user.getRole()); 
+        return new AuthResponse(jwtToken, user.getRole()); 
     }
-
-
-    @PostMapping("/register")
-    public String register(@RequestBody User user) {
-        // 🛡 Encrypt password
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        @PostMapping("/register")
+        public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(Role.valueOf(request.getRole().toUpperCase()));
+        user.setName(request.getName());
 
         userRepository.save(user);
-        return "User registered successfully";
+
+        // ✅ Send welcome email
+        emailService.sendEmail(
+        user.getEmail(),
+        "🎉 Welcome to ShikshaSetu!",
+        "Dear " + user.getName() + ",\n\n" +
+        "Welcome to ShikshaSetu – your learning journey starts now!\n" +
+        "Explore courses, watch videos, and grow your skills 🚀\n\n" +
+        "Regards,\nTeam ShikshaSetu"
+    );
+    return ResponseEntity.ok("User registered successfully");
     }
 }

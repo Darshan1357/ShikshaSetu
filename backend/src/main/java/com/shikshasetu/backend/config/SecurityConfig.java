@@ -14,9 +14,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import com.shikshasetu.backend.filter.JwtRequestFilter;
 //import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import java.util.Arrays;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -70,6 +76,19 @@ public class SecurityConfig {
         .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
+    } 
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration config = new CorsConfiguration();
+    config.setAllowedOrigins(Arrays.asList("*")); // allow all origins
+    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    config.setAllowedHeaders(Arrays.asList("*"));
+    config.setAllowCredentials(true);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", config);
+    return source;
     }
 }
 

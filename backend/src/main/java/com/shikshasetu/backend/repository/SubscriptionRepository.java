@@ -13,4 +13,6 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
     boolean existsByUserAndActiveTrue(User user);
     boolean existsByUserAndCourseAndActiveTrue(User user, Course course);
     List<Subscription> findByActiveFalseAndEndDateBefore(java.time.LocalDate date);
+    long countByActiveTrue();
+    long countByCourseAndActiveTrue(Course course);
 }

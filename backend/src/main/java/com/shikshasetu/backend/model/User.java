@@ -25,7 +25,8 @@ public class User {
 
     private String password;
 
-    private String role; // STUDENT, TRAINER, ADMIN
+    @Enumerated(EnumType.STRING)
+    private Role role; // STUDENT, TRAINER, ADMIN
 
     @Builder.Default
     private boolean active = true;
@@ -43,5 +44,9 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public void setRole(Role role) {
+    this.role = role;
     }
 }

@@ -33,7 +33,7 @@ public class Course {
     private Integer durationInWeeks;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_date", nullable = false, updatable = false)
+    @Column(name = "created_date", nullable = true, updatable = false)
     @Builder.Default
     private LocalDateTime createdDate = LocalDateTime.now();    
 

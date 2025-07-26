@@ -36,8 +36,8 @@ public class EnrollmentController {
 
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
-
-        if (!student.getRole().equalsIgnoreCase("STUDENT")) {
+        
+        if (student.getRole() == Role.STUDENT) {
             return ResponseEntity.status(403).body("Only students can enroll.");
         }
 

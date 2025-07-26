@@ -64,4 +64,19 @@ public class SubscriptionService {
         emailService.sendEmail(email, "ShikshaSetu: Subscription Expiry Reminder", message);
     }
     }
+
+    public Subscription createNewSubscription(User user, Course course) {
+    LocalDate today = LocalDate.now();
+    LocalDate endDate = today.plusDays(7);
+
+    Subscription subscription = Subscription.builder()
+            .user(user)
+            .course(course)
+            .startDate(today)
+            .endDate(endDate)
+            .active(true)
+            .build();
+
+    return subscriptionRepository.save(subscription);
+    }
 }

@@ -1,15 +1,17 @@
 package com.shikshasetu.backend.controller;
 
 import com.shikshasetu.backend.dto.AdminDashboardStatsDTO;
-import com.shikshasetu.backend.dto.AdminVideoStatsDTO;
-
+//import com.shikshasetu.backend.dto.AdminVideoStatsDTO;
 import lombok.RequiredArgsConstructor;
-import com.shikshasetu.backend.model.Course;
-import com.shikshasetu.backend.model.User;
+import com.shikshasetu.backend.model.*;
+import com.shikshasetu.backend.repository.CertificateRepository;
 import com.shikshasetu.backend.repository.CourseRepository;
 import com.shikshasetu.backend.repository.EnrollmentRepository;
+import com.shikshasetu.backend.repository.SubscriptionRepository;
 import com.shikshasetu.backend.repository.UserRepository;
+import com.shikshasetu.backend.repository.VideoContentRepository;
 import com.shikshasetu.backend.service.AdminAnalyticsService;
+
 import com.shikshasetu.backend.util.CsvExportUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -30,6 +32,9 @@ public class AdminController {
     private final UserRepository userRepo;
     private final CourseRepository courseRepo;
     private final EnrollmentRepository enrollmentRepo;
+    private final VideoContentRepository videoContentRepo;
+    private final CertificateRepository certificateRepo;
+    private final SubscriptionRepository subscriptionRepo;
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -52,7 +57,7 @@ public class AdminController {
     public ResponseEntity<String> promoteToInstructor(@PathVariable Long userId) {
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        user.setRole("INSTRUCTOR");
+        user.setRole(Role.INSTRUCTOR);
         userRepo.save(user);
         return ResponseEntity.ok("User promoted to Instructor.");
     }
@@ -68,33 +73,31 @@ public class AdminController {
     }
 
     @GetMapping("/dashboard-stats")
-    public ResponseEntity<AdminDashboardStatsDTO> getDashboardStats() {
+    public ResponseEntity<AdminDashboardStatsDTO> getAdminDashboardStats() {
         long totalUsers = userRepo.count();
-        long totalStudents = userRepo.countByRole("STUDENT");
-        long totalInstructors = userRepo.countByRole("INSTRUCTOR");
-        long totalAdmins = userRepo.countByRole("ADMIN");
-
+        long totalStudents = userRepo.countByRole(Role.STUDENT);
+        long totalInstructors = userRepo.countByRole(Role.INSTRUCTOR);
         long totalCourses = courseRepo.count();
         long totalEnrollments = enrollmentRepo.count();
+        long totalVideos = videoContentRepo.count();
+        long totalCertificates = certificateRepo.count();
+        long activeSubscriptions = subscriptionRepo.countByActiveTrue();
 
-        double revenue = totalEnrollments * 1.0; // ₹1 per enrollment
+        double totalrevenue = totalEnrollments * 1.0; // ₹1 per enrollment
 
         AdminDashboardStatsDTO stats = new AdminDashboardStatsDTO(
                 totalUsers,
                 totalStudents,
                 totalInstructors,
-                totalAdmins,
                 totalCourses,
+                totalVideos,
                 totalEnrollments,
-                revenue
+                totalCertificates,
+                activeSubscriptions,
+                totalrevenue
         );
 
         return ResponseEntity.ok(stats);
-    }
-    @GetMapping("/admin/video-stats")
-    public ResponseEntity<AdminVideoStatsDTO> getVideoStats() {
-    AdminVideoStatsDTO stats = adminAnalyticsService.getPlatformVideoStats();
-    return ResponseEntity.ok(stats);
     }
 
     @GetMapping("/analytics")
